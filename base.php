@@ -7,8 +7,8 @@
         <h1>Titulo Página</h1>
     </main>
 
-    <?php
-        includeTemplate('footer')
-    ?>
+<?php
+    includeTemplate('footer')
+?>
 </body>
 </html>
