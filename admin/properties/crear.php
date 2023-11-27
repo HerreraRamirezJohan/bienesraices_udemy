@@ -1,4 +1,8 @@
 <?php
+    require '../../includes/funciones.php';
+    if(!estaAutenticado()){
+        header('Location: /');
+    }
     require '../../includes/config/database.php';
     $db = conectionDB();
 

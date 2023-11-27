@@ -15,11 +15,25 @@
 
         if(empty($errores)){
             // Revisar si el usuario existe
-            $query = "SELECT * FROM user WHERE email = $email";
+            $query = "SELECT * FROM user WHERE email = '$email'";
             $result = mysqli_query($db, $query);
 
             if($result->num_rows){
-                // Revisar que el password sea correcto
+                $user = mysqli_fetch_assoc($result);
+
+                //verificar contraseña
+                $auth = password_verify($password, $user['password']);
+
+                if($auth){
+                    session_start();
+                    // La contraseña es correcta.
+                    $_SESSION['id'] = $user['id'];
+                    $_SESSION['login'] = true;
+
+                    header('Location: /admin');
+                }else{
+                    $errores [] = "El password es incorrecto";
+                }
             }else{
                 $errores[] = "El usuario no existe";
             }

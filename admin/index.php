@@ -1,4 +1,9 @@
 <?php
+    require '../includes/funciones.php';
+    if(!estaAutenticado()){
+        header('Location: /');
+    }
+    
     // Importar la conexion
     require '../includes/config/database.php';
     $db = conectionDB();
@@ -36,7 +41,6 @@
     }
 
     //Template header
-    require '../includes/funciones.php';
     includeTemplate('header');
 ?>
 
