@@ -2,11 +2,10 @@
     require '../includes/app.php';
     estaAutenticado();
     
-    $db = conectionDB();
-    //escribir el query
-    $query = "SELECT * FROM propertie";
-    //Consultar DB
-    $result = mysqli_query($db, $query);
+    use App\Propiedad;
+
+    //Metodo para obtener todas las propiedades
+    $propiedades = Propiedad::all();
 
     // Mensaje
     // remplazo del isset
@@ -63,22 +62,22 @@
             </thead>
             <!-- Mostrar los resultados -->
             <tbody>
-                <?php while ($propertie = mysqli_fetch_assoc($result)): ?>
+                <?php foreach ($propiedades as $propertie): ?>
                     <tr>
-                    <td><?php echo $propertie['id'] ?></td>
-                    <td><?php echo $propertie['title'] ?></td>
-                    <td><img src="/imagenes/<?php echo $propertie['imagen'] ?>" class="imagen-tabla"></td>
-                    <td>$<?php echo $propertie['price'] ?></td>
+                    <td><?php echo $propertie->id ?></td>
+                    <td><?php echo $propertie->title ?></td>
+                    <td><img src="/imagenes/<?php echo $propertie->imagen ?>" class="imagen-tabla"></td>
+                    <td>$<?php echo $propertie->price ?></td>
                     <td>
                         <form method="POST">
-                            <input type="hidden" name="id" value="<?php echo $propertie['id'] ?>">
+                            <input type="hidden" name="id" value="<?php echo $propertie->id ?>">
                             <input type="submit" value="Eliminar" class="boton-rojo-block">
 
                         </form>
-                        <a href="/admin/properties/actualizar.php?id=<?php echo $propertie['id'] ?>" class="boton-amarillo-block">Actualizar</a>
+                        <a href="/admin/properties/actualizar.php?id=<?php echo $propertie->id ?>" class="boton-amarillo-block">Actualizar</a>
                     </td>
                 </tr>
-                <?php endwhile; ?>
+                <?php endforeach; ?>
             </tbody>
         </table>
 
