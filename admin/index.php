@@ -1,11 +1,7 @@
 <?php
-    require '../includes/funciones.php';
-    if(!estaAutenticado()){
-        header('Location: /');
-    }
+    require '../includes/app.php';
+    estaAutenticado();
     
-    // Importar la conexion
-    require '../includes/config/database.php';
     $db = conectionDB();
     //escribir el query
     $query = "SELECT * FROM propertie";

@@ -1,8 +1,6 @@
 <?php
-    require '../../includes/funciones.php';
-    if(!estaAutenticado()){
-        header('Location: /');
-    }
+    require '../../includes/app.php';
+    estaAutenticado();
     
     $id = $_GET['id'];
     $id = filter_var($id, FILTER_VALIDATE_INT);
@@ -10,8 +8,6 @@
     if(!$id){
         header('Location: /admin');
     }
-
-    require '../../includes/config/database.php';
     $db = conectionDB();
 
     $consulta = "SELECT * FROM propertie where id = $id";
@@ -123,8 +119,6 @@
             }
         }
     }
-
-    require '../../includes/funciones.php';
     includeTemplate('header');    
 ?>
 

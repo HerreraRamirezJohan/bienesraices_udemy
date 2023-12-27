@@ -1,15 +1,16 @@
 <?php
-    require '../../includes/funciones.php';
-    if(!estaAutenticado()){
-        header('Location: /');
-    }
-    require '../../includes/config/database.php';
+    require '../../includes/app.php';
     $db = conectionDB();
+    use App\Propiedad; 
+    use Intervention\Image\ImageManager as Image;
+    use Intervention\Image\Drivers\Gd\Driver;
+
+    $manager = new Image(new Driver());
 
     $consulta = "SELECT * FROM seller;";
     $sellers = mysqli_query($db, $consulta);
     //Arreglo de mensajes de errores
-    $errors = [];
+    $errors = Propiedad::getErrores();
     //Variables
     $titulo = '';
     $price = '';
@@ -22,71 +23,31 @@
     $imagen = ''; // se busca por el name
 
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
-        // echo "<pre>";
-        // var_dump($_POST);
-        // echo "</pre>";
 
-        //Esto se evita usando sentencias preparadas con PDO
-        $titulo = mysqli_real_escape_string( $db, $_POST['title']);
-        $price = mysqli_real_escape_string( $db, $_POST['price']);
-        $description = mysqli_real_escape_string( $db, $_POST['description']);
-        $rooms = mysqli_real_escape_string( $db, $_POST['rooms']);
-        $wc = mysqli_real_escape_string( $db, $_POST['wc']);
-        $parking = mysqli_real_escape_string( $db, $_POST['parking']);
-        $id_seller = mysqli_real_escape_string( $db, $_POST['seller']);
+        $propiedad = new Propiedad($_POST);
+        // Generar un nombre unico
+        $nombreImagen = md5(uniqid(rand(), true)) . ".jpeg";
 
-        $imagen = $_FILES['imagen']; // se busca por el name
-        echo "<pre>";
-        var_dump($imagen);
-        echo "</pre>";
+        //subir la imagen con un corte
+        if($_FILES['imagen']['tmp_name']){
+            $image = $manager->read($_FILES['imagen']['tmp_name'])->cover(800, 600);
+            $propiedad->setImagen($nombreImagen);
+        }
 
-        if(!$titulo)
-            $errors["title"] = "Debes añadir un titulo";
-        if(!$price)
-            $errors["price"] = "Debes añadir un precio";
-        if(!$description)
-            $errors["description"] = "Debes añadir un descripción";
-        if(strlen($description) < 30)
-            $errors["description-len"] = "La descripcion debe ser de 30 caracteres";
-        if(!$rooms)
-            $errors["rooms"] = "Debes añadir una habitación";
-        if(!$wc)
-            $errors["wc"] = "Debes añadir un wc";
-        if(!$parking)
-            $errors["parking"] = "Debes añadir un estacionamiento";
-        if(!$id_seller)
-            $errors["seller"] = "Debes añadir un vendedor";
-        if(!$imagen['name'])
-            $errors["imagen"] = "Debes añadir un una imagen";
+        $errors = $propiedad->validar();
 
-        //Validar por tamaño 1000Kb
-        $max_size = 100;
-        $medida = 1000 * $max_size;// multiplicamos por 1000 porque eso vale 1 kilobyte
-
-        if($imagen['error'])
-            $errors['imagen-size'] = "La imagen es muy pesada!";
-        // Subir imagen
-        
-
-        // echo "<pre>";
-        // var_dump($errors);
-        // echo "</pre>";
         if(empty($errors)){
             //guardar imagenes
-            // Crear una carpeta
-            $carpetaImagenes = "../../imagenes/";
-            if(!is_dir($carpetaImagenes))// Retorna si una carpeata existe o no
-                mkdir($carpetaImagenes);
-            // Generar un nombre unico
-            $nombreImagen = md5(uniqid(rand(), true)) . ".jpeg";
-            move_uploaded_file($imagen["tmp_name"], $carpetaImagenes . $nombreImagen);
-            // Insertar datos a DB
-            $query = "INSERT INTO propertie (title, price, imagen, description, rooms, wc, parking, id_seller) VALUES
-                    ('$titulo', '$price', '$nombreImagen', '$description', '$rooms', '$wc', '$parking', '$id_seller')
-                    ";
+
+            if(!is_dir(CARPETA_IMAGENES)){
+                mkdir(CARPETA_IMAGENES);
+            }
+
+            //Guardarla en la clase y en el servidor
+            $image->toJpeg()->save(CARPETA_IMAGENES . $nombreImagen);
             
-            $resultado = mysqli_query($db, $query);
-    
+            $resultado = $propiedad->guardar();
+
             if($resultado){
                 //Redireccionar 
                 header("Location: /admin?success=1");
@@ -96,7 +57,6 @@
         }
     }
 
-    require '../../includes/funciones.php';
     includeTemplate('header');    
 ?>
 

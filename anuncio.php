@@ -1,7 +1,6 @@
 <?php
-
-    // importar db
-    require_once 'includes/config/database.php';
+    require 'includes/app.php';
+    
     $db = conectionDB();
     //consultar las propiedades
     $id = $_GET['id'];
@@ -13,7 +12,6 @@
     }
     $propiedad = mysqli_fetch_assoc($result);
 
-    require 'includes/funciones.php';
     includeTemplate('header');
 ?>
 
