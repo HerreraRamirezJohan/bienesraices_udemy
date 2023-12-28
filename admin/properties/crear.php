@@ -1,8 +1,9 @@
 <?php
     require '../../includes/app.php';
     $db = conectionDB();
-    use App\Propiedad; 
-    use Intervention\Image\ImageManager as Image;
+    use App\Propiedad;
+use Intervention\Image\Colors\Profile;
+use Intervention\Image\ImageManager as Image;
     use Intervention\Image\Drivers\Gd\Driver;
 
     $manager = new Image(new Driver());
@@ -11,16 +12,7 @@
     $sellers = mysqli_query($db, $consulta);
     //Arreglo de mensajes de errores
     $errors = Propiedad::getErrores();
-    //Variables
-    $titulo = '';
-    $price = '';
-    $description = '';
-    $rooms = '';
-    $wc = '';
-    $parking = '';
-    $id_seller = '';
-    //Variable imagen
-    $imagen = ''; // se busca por el name
+    $propiedad = new Propiedad();
 
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
 
@@ -73,77 +65,7 @@
 
         <!-- enctype es muy importante para subir imagenes y archivos -->
         <form class="formulario" action="/admin/properties/crear.php" method="POST" enctype="multipart/form-data">
-            <fieldset>
-                <legend>Informacion General</legend>
-                <label for="titulo">Titulo:</label>
-                <input 
-                    type="text" 
-                    id="title" 
-                    name="title" 
-                    placeholder="Titulo de la Propiedad" 
-                    value="<?php echo $titulo ?>">
-
-                <label for="price">Precio:</label>
-                <input 
-                    type="number" 
-                    id="price" 
-                    name="price" 
-                    placeholder="Precio propiedad" 
-                    value="<?php echo $price ?>">
-
-                <label for="imagen">Imagen:</label>
-                <input type="file" id="imagen" accept="image/jpeg, image/png" name="imagen">
-
-                <label for="description">Descripción:</label>
-                <!-- No tiene atributo value -->
-                <textarea name="description" id="description" ><?php echo $description ?></textarea>
-            </fieldset>
-
-            <fieldset>
-                <legend>Informacion Propiedad</legend>
-
-                <label for="rooms">Habitaciones</label>
-                <input 
-                    type="number" 
-                    id="rooms" 
-                    name="rooms"
-                    placeholder="Número de habitaciones: Ej 3" 
-                    min="1" 
-                    max="9" 
-                    value="<?php echo $rooms ?>">
-                
-                <label for="wc">Baños</label>
-                <input 
-                    type="number" 
-                    id="wc" 
-                    name="wc" 
-                    placeholder="Número de baños: Ej 3" 
-                    min="1" 
-                    max="9" 
-                    value="<?php echo $wc ?>">
-
-                <label for="parking">Estacionamiento</label>
-                <input 
-                    type="number" 
-                    id="parking" 
-                    name="parking" 
-                    placeholder="Número de estacionamientos: Ej 3" 
-                    min="1" max="9" 
-                    value="<?php echo $parking ?>">
-            </fieldset>
-
-            <fieldset>
-                <legend>Vendedor</legend>
-                <select name="seller" id="seller">
-                    <option value="" selected >--Seleccione vendedor--</option>
-                    <?php while ($seller = mysqli_fetch_assoc($sellers)) :?>
-                        <option 
-                            <?php echo $seller['id'] === $id_seller ? 'selected' : ''?>
-                            value="<?php echo $seller['id']?>"><?php echo $seller['name'] . " " . $seller['lastname']?>
-                        </option>
-                    <?php endwhile;?>
-                </select>
-            </fieldset>
+            <?php include  '../../includes/templates/formulario_propiedades.php';?>
 
             <input type="submit" value="Registrar propiedad" class="boton-verde">
         </form>

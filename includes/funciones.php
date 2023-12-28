@@ -24,3 +24,7 @@ function debug($var = []){
     echo "</pre>";
     exit;
 }
+
+function s($html) : string{
+    return $s = htmlspecialchars($html);
+}
