@@ -40,11 +40,18 @@ class Propiedad {
         $this->rooms = $args['rooms'] ?? '';
         $this->wc = $args['wc'] ?? '';
         $this->parking = $args['parking'] ?? '';
-        $this->id_seller = $args['seller'] ?? '';
+        $this->id_seller = $args['id_seller'] ?? '';
         $this->created_at = $args['created_at'] ?? '';
     }
 
-    public function guardar() : bool {
+    public function guardar(){
+        if(isset($this->id)){
+            $this->actualizar();
+        }else{
+            $this->crear();
+        }
+    }
+    public function crear() : bool {
         try {
 
             //Sanitizar los datos
@@ -64,6 +71,28 @@ class Propiedad {
 
         return true;
         
+    }
+    public function actualizar(){
+        //Sanitizar los datos
+        $atributos = $this->sanitizarAtributos();
+
+        $valores = [];
+
+        foreach ($atributos as $key => $value) {
+            $valores[] = "$key='$value'";
+        }
+
+        $query = "UPDATE propertie SET ";
+        $query .= join(", ",$valores);
+        $query .= " WHERE id = '" . self::$db->escape_string($this->id) . "'";
+        $query .= " LIMIT 1";
+
+        try {
+            $result = self::$db->query($query);
+
+        } catch (\Throwable $th) {
+            debug($th->getMessage());
+        }
     }
 
     //Definir la conexion
@@ -100,6 +129,14 @@ class Propiedad {
 
     //Subida de archivos
     public function setImagen($imagen){
+
+        if(isset($this->id)){//detecta si se esta editando un registro
+            $existFile = file_exists(CARPETA_IMAGENES . $this->imagen);
+            if($existFile){
+                unlink(CARPETA_IMAGENES . $this->imagen);
+            }
+        }
+
         if($imagen)
             $this->imagen = $imagen;
     }
@@ -132,6 +169,11 @@ class Propiedad {
 
         return self::consultarSQL($query);
     }
+    public static function find($id){
+        $query = "SELECT * FROM propertie where id = $id";
+        $result = self::consultarSQL($query);
+        return array_shift($result);
+    }
 
     public static function consultarSQL($query){
         $resultado = self::$db->query($query);
@@ -156,5 +198,14 @@ class Propiedad {
         }
 
         return $objeto;
+    }
+
+    //Sincornizar el objeto con los cambios realizados por el usuario
+    public function sincronizar($args = []){
+        foreach ($args as $key => $value) {
+            if(property_exists($this, $key) && !is_null($value)){
+                $this->$key = $value;
+            }
+        }
     }
 }

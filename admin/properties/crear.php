@@ -2,8 +2,7 @@
     require '../../includes/app.php';
     $db = conectionDB();
     use App\Propiedad;
-use Intervention\Image\Colors\Profile;
-use Intervention\Image\ImageManager as Image;
+    use Intervention\Image\ImageManager as Image;
     use Intervention\Image\Drivers\Gd\Driver;
 
     $manager = new Image(new Driver());
@@ -16,13 +15,13 @@ use Intervention\Image\ImageManager as Image;
 
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
 
-        $propiedad = new Propiedad($_POST);
+        $propiedad = new Propiedad($_POST['propiedad']);
         // Generar un nombre unico
         $nombreImagen = md5(uniqid(rand(), true)) . ".jpeg";
 
         //subir la imagen con un corte
-        if($_FILES['imagen']['tmp_name']){
-            $image = $manager->read($_FILES['imagen']['tmp_name'])->cover(800, 600);
+        if($_FILES['propiedad']['tmp_name']['imagen']){
+            $image = $manager->read($_FILES['propiedad']['tmp_name']['imagen'])->cover(800, 600);
             $propiedad->setImagen($nombreImagen);
         }
 

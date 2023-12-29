@@ -4,7 +4,7 @@
     <input 
         type="text" 
         id="title" 
-        name="title" 
+        name="propiedad[title]" 
         placeholder="Titulo de la Propiedad" 
         value="<?php echo s($propiedad->title) ?>">
 
@@ -12,16 +12,20 @@
     <input 
         type="number" 
         id="price" 
-        name="price" 
+        name="propiedad[price]" 
         placeholder="Precio propiedad" 
         value="<?php echo s($propiedad->price) ?>">
 
     <label for="imagen">Imagen:</label>
-    <input type="file" id="imagen" accept="image/jpeg, image/png" name="imagen">
+    <input type="file" id="imagen" accept="image/jpeg, image/png" name="propiedad[imagen]">
+
+    <?php if($propiedad->imagen): ?>
+        <img src="/imagenes/<?php echo s($propiedad->imagen)?>" alt="" class="imagen-small">
+    <?php endif; ?>
 
     <label for="description">Descripción:</label>
     <!-- No tiene atributo value -->
-    <textarea name="description" id="description" ><?php echo s($propiedad->description) ?></textarea>
+    <textarea name="propiedad[description]" id="description" ><?php echo s($propiedad->description) ?></textarea>
 </fieldset>
 
 <fieldset>
@@ -31,7 +35,7 @@
     <input 
         type="number" 
         id="rooms" 
-        name="rooms"
+        name="propiedad[rooms]"
         placeholder="Número de habitaciones: Ej 3" 
         min="1" 
         max="9" 
@@ -41,7 +45,7 @@
     <input 
         type="number" 
         id="wc" 
-        name="wc" 
+        name="propiedad[wc]" 
         placeholder="Número de baños: Ej 3" 
         min="1" 
         max="9" 
@@ -51,7 +55,7 @@
     <input 
         type="number" 
         id="parking" 
-        name="parking" 
+        name="propiedad[parking]" 
         placeholder="Número de estacionamientos: Ej 3" 
         min="1" max="9" 
         value="<?php echo s($propiedad->parking) ?>">
@@ -59,7 +63,7 @@
 
 <fieldset>
     <legend>Vendedor</legend>
-    <select name="seller" id="seller">
+    <select name="propiedad[id_seller]" id="seller">
         <option value="" selected >--Seleccione vendedor--</option>
         <?php while ($seller = mysqli_fetch_assoc($sellers)) :?>
             <option 
