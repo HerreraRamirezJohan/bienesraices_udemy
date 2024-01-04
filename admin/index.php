@@ -18,20 +18,10 @@
         $id = filter_var($id, FILTER_VALIDATE_INT);//VALIDAMOS QUE NO INGRESEN CODIGO SQL 
 
         if($id){
-            //Eliminar el archivo
-            $query = "SELECT imagen FROM propertie WHERE id = $id";
-            $result = mysqli_query($db, $query);
-            $propertie = mysqli_fetch_assoc($result);
 
-            unlink('../imagenes/' . $propertie['imagen']);
-
-            //Eliminar la propiedad
-            $query = "DELETE FROM propertie WHERE id = $id";
-            $result = mysqli_query($db, $query);
-
-            if($result){
-                header('location: /admin?success=3');
-            }
+            $propiedad = Propiedad::find($id);
+            $propiedad->eliminar();
+            unlink('../imagenes/' . $propiedad->imagen);
         }
     }
 

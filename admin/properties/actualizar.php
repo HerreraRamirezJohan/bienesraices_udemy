@@ -43,8 +43,8 @@
             $image->toJpeg()->save(CARPETA_IMAGENES . $nombreImagen);
             
             $resultado = $propiedad->guardar();
-            if(!$resultado){
-                //Redireccionar 
+            if($resultado){
+                //Redireccionar  
                 header("Location: /admin?success=2");
             }else{
                 $errors['DB error'] = "El servidor no responde";

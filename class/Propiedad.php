@@ -45,10 +45,18 @@ class Propiedad {
     }
 
     public function guardar(){
-        if(isset($this->id)){
-            $this->actualizar();
+        if($this->id){
+            return $this->actualizar();
         }else{
-            $this->crear();
+            return $this->crear();
+        }
+    }
+    public function eliminar(){
+        $query = "DELETE FROM propertie WHERE id = " .  self::$db->escape_string($this->id) . " LIMIT 1";
+        $resultado = self::$db->query($query);
+
+        if($resultado){
+            header('location: /admin?success=3');
         }
     }
     public function crear() : bool {
@@ -93,6 +101,7 @@ class Propiedad {
         } catch (\Throwable $th) {
             debug($th->getMessage());
         }
+        return true;
     }
 
     //Definir la conexion
