@@ -1,17 +1,18 @@
 <?php
     require '../../includes/app.php';
     $db = conectionDB();
+    estaAutenticado();
     use App\Propiedad;
+    use App\Vendedor;
     use Intervention\Image\ImageManager as Image;
     use Intervention\Image\Drivers\Gd\Driver;
 
     $manager = new Image(new Driver());
 
-    $consulta = "SELECT * FROM seller;";
-    $sellers = mysqli_query($db, $consulta);
+    $sellers = Vendedor::all();
     //Arreglo de mensajes de errores
+    $propiedad = new Propiedad;
     $errors = Propiedad::getErrores();
-    $propiedad = new Propiedad();
 
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
 

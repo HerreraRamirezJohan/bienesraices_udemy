@@ -3,9 +3,11 @@
     estaAutenticado();
     
     use App\Propiedad;
+    use App\Vendedor;
 
     //Metodo para obtener todas las propiedades
     $propiedades = Propiedad::all();
+    $vendedores = Vendedor::all();
 
     // Mensaje
     // remplazo del isset
@@ -14,14 +16,20 @@
 
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
         $id = $_POST['id'];
-
-        $id = filter_var($id, FILTER_VALIDATE_INT);//VALIDAMOS QUE NO INGRESEN CODIGO SQL 
-
-        if($id){
-
-            $propiedad = Propiedad::find($id);
-            $propiedad->eliminar();
-            unlink('../imagenes/' . $propiedad->imagen);
+        if($_POST['type'] == 'propertie'){
+            debug($_POST);
+    
+            $id = filter_var($id, FILTER_VALIDATE_INT);//VALIDAMOS QUE NO INGRESEN CODIGO SQL 
+    
+            if($id){
+    
+                $propiedad = Propiedad::find($id);
+                $propiedad->eliminar();
+                unlink('../imagenes/' . $propiedad->imagen);
+            }
+        }else if ($_POST['type'] == 'seller'){
+            $seller = Vendedor::find($id);
+            $seller->eliminar();
         }
     }
 
@@ -32,13 +40,14 @@
     <main class="contenedor seccion">
         <h1>Administrador</h1>
         <?php if($success == 1): ?>
-            <p class="alerta success">Anuncio de Propiedad creado correctamente.</p>
+            <p class="alerta success">Registro creado correctamente.</p>
         <?php elseif ($success == 2): ?>
-            <p class="alerta success">Anuncio de Propiedad actualizado correctamente.</p>
+            <p class="alerta success">Registro actualizado correctamente.</p>
         <?php elseif ($success == 3): ?>
-            <p class="alerta success">Anuncio de Propiedad eliminado correctamente.</p>
+            <p class="alerta success">Registro eliminado correctamente.</p>
         <?php endif; ?>
         <a href="/admin/properties/crear.php" class="boton boton-verde">Nueva Propiedad</a>
+        <a href="/admin/sellers/crear.php" class="boton boton-amarillo">Nuevo Vendedor</a>
 
         <table class="properties">
             <thead>
@@ -61,6 +70,7 @@
                     <td>
                         <form method="POST">
                             <input type="hidden" name="id" value="<?php echo $propertie->id ?>">
+                            <input type="hidden" name="type" value="propertie">
                             <input type="submit" value="Eliminar" class="boton-rojo-block">
 
                         </form>
@@ -71,11 +81,39 @@
             </tbody>
         </table>
 
+        <h1>Administracion de Vendedores</h1>
+        <table class="properties">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Telefono</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <!-- Mostrar los resultados -->
+            <tbody>
+                <?php foreach ($vendedores as $seller): ?>
+                    <tr>
+                    <td><?php echo s($seller->id) ?></td>
+                    <td><?php echo s($seller->name . " " . $seller->lastname) ?></td>
+                    <td><?php echo s($seller->phone)?></td>
+                    <td>
+                        <form method="POST">
+                            <input type="hidden" name="id" value="<?php echo s($seller->id) ?>">
+                            <input type="hidden" name="type" value="seller">
+                            <input type="submit" value="Eliminar" class="boton-rojo-block">
+
+                        </form>
+                        <a href="/admin/sellers/actualizar.php?id=<?php echo s($seller->id) ?>" class="boton-amarillo-block">Actualizar</a>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
     </main>
 
     <?php
-        // Cerrar la conexion
-        mysqli_close($db);
         //footer
         includeTemplate('footer');
     ?>

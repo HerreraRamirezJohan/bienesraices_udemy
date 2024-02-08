@@ -1,6 +1,7 @@
 <?php
     require '../../includes/app.php';
     use App\Propiedad;
+    use App\Vendedor;
     use Intervention\Image\ImageManager as Image;
     use Intervention\Image\Drivers\Gd\Driver;
     $manager = new Image(new Driver());
@@ -17,8 +18,7 @@
     //Obtener propiedad
     $propiedad = Propiedad::find($id);
 
-    $consulta = "SELECT * FROM seller;";
-    $sellers = mysqli_query($db, $consulta);
+    $sellers = Vendedor::all();
     //Arreglo de mensajes de errores
     $errors = Propiedad::getErrores();
 
@@ -39,8 +39,9 @@
         }
         
         if(empty($errors)){
-            
-            $image->toJpeg()->save(CARPETA_IMAGENES . $nombreImagen);
+            if(!is_null($image)){
+                $image->toJpeg()->save(CARPETA_IMAGENES . $nombreImagen);
+            }
             
             $resultado = $propiedad->guardar();
             if($resultado){
