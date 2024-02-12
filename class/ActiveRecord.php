@@ -133,6 +133,11 @@ class ActiveRecord{
 
         return self::consultarSQL($query);
     }
+
+    public static function get($limit){
+        $query = "SELECT * FROM " . static::$table . " LIMIT $limit";
+        return self::consultarSQL($query);
+    }
     public static function find($id){
         $query = "SELECT * FROM " . static::$table . " where id = $id";
         $result = self::consultarSQL($query);

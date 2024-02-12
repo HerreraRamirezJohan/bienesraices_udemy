@@ -39,13 +39,13 @@
 
     <main class="contenedor seccion">
         <h1>Administrador</h1>
-        <?php if($success == 1): ?>
-            <p class="alerta success">Registro creado correctamente.</p>
-        <?php elseif ($success == 2): ?>
-            <p class="alerta success">Registro actualizado correctamente.</p>
-        <?php elseif ($success == 3): ?>
-            <p class="alerta success">Registro eliminado correctamente.</p>
-        <?php endif; ?>
+
+        <?php
+            $mensaje = mostrarNotificacion(intval($success));
+            if($mensaje){ ?>
+                <p class='alerta success'><?php echo s($mensaje) ?></p>
+        <?php } ?>
+
         <a href="/admin/properties/crear.php" class="boton boton-verde">Nueva Propiedad</a>
         <a href="/admin/sellers/crear.php" class="boton boton-amarillo">Nuevo Vendedor</a>
 
