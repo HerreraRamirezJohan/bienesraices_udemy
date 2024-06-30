@@ -1,7 +1,7 @@
 <?php
     require '../../includes/app.php';
-    use App\Propiedad;
-    use App\Vendedor;
+    use Model\Propiedad;
+    use Model\Vendedor;
     use Intervention\Image\ImageManager as Image;
     use Intervention\Image\Drivers\Gd\Driver;
     $manager = new Image(new Driver());

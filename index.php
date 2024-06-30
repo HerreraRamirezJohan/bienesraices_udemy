@@ -1,5 +1,5 @@
 <?php
-    require 'includes/app.php';
+    require_once 'includes/app.php';
     includeTemplate('header', $inicio = true);
 ?>
 

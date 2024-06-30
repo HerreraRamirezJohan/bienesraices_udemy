@@ -10,7 +10,7 @@ class QueryBuilder extends DB{
     private $limit = 20000;
     private $param = [];
  
-    public function __construct($table)
+    public function __construct($table = null)
     {
         self::$table = $table;
     }

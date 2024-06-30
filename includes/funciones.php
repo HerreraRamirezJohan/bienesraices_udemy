@@ -2,36 +2,41 @@
 
 define('TEMPLATES_URL', __DIR__ . '/templates');
 define('FUNCIONES_URL', __DIR__ . 'funciones.php');
-define('CARPETA_IMAGENES', __DIR__ . '/../imagenes/');
+define('CARPETA_IMAGENES', $_SERVER['DOCUMENT_ROOT'] . '/imagenes/');
 
-function includeTemplate(string $nameTemplate, bool $inicio = false){
+function includeTemplate(string $nameTemplate, bool $inicio = false)
+{
     include TEMPLATES_URL . "/$nameTemplate.php";
 }
-function estaAutenticado() : bool {
+function estaAutenticado(): bool
+{
     session_start();
-    if(isset($_SESSION['login'])){
+    if (isset($_SESSION['login'])) {
         $auth = $_SESSION['login'];
-        
-        if($auth)
+
+        if ($auth)
             return true;
     }
-    
+
     header('Location: /');
 }
-function debug($var = []){
+function debug($var = [])
+{
     echo "<pre>";
     var_dump($var);
     echo "</pre>";
     exit;
 }
 
-function s($html) : string{
+function s($html): string
+{
     return $s = htmlspecialchars($html);
 }
 
-function mostrarNotificacion($codigo){
+function mostrarNotificacion($codigo)
+{
     $mensaje = "";
-    switch($codigo){
+    switch ($codigo) {
         case 1:
             $mensaje = "Creado correctamente!";
             break;
@@ -46,4 +51,16 @@ function mostrarNotificacion($codigo){
     }
 
     return $mensaje;
+}
+
+function checkUrl(string $url)
+{
+    $id = $_GET['id'];
+    $id = filter_var($id, FILTER_VALIDATE_INT);
+
+    if(!$id){
+        header("Location: $url");
+    }
+
+    return $id;
 }

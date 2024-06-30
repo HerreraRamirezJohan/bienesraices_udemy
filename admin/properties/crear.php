@@ -2,8 +2,8 @@
     require '../../includes/app.php';
     $db = conectionDB();
     estaAutenticado();
-    use App\Propiedad;
-    use App\Vendedor;
+    use Model\Propiedad;
+    use Model\Vendedor;
     use Intervention\Image\ImageManager as Image;
     use Intervention\Image\Drivers\Gd\Driver;
 
@@ -39,6 +39,8 @@
             $image->toJpeg()->save(CARPETA_IMAGENES . $nombreImagen);
             
             $resultado = $propiedad->guardar();
+
+            debug($resultado);
 
             if($resultado){
                 //Redireccionar 

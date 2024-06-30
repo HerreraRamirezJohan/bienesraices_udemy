@@ -17,7 +17,7 @@ class ActiveRecord extends QueryBuilder{
         return $array;
     }
 
-    private static function createObject($args){
+    protected static function createObject($args){
         $object = new static;
 
         foreach ($args as $key => $value) {

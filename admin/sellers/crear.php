@@ -1,6 +1,6 @@
 <?php
 require '../../includes/app.php';
-use App\Vendedor;
+use Model\Vendedor;
 
 estaAutenticado();
 

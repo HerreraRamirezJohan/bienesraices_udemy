@@ -4,20 +4,17 @@ namespace Modules;
 use PDO;
 
 class DB{
-    protected static $db = [];
-    protected static $dbSelected = '';
+    protected static $db;
 
-    public static function setDB($database, $connectionKey)
+    public static function setDB($dbConnection)
     {
-        self::$db[$connectionKey] = $database;
+        self::$db = $dbConnection;
     }
 
     protected static function execute($query, $params = [])
     {
-        $connectionKey = self::$dbSelected;
-
         try {
-            $stmt = self::$db[$connectionKey]->prepare($query);
+            $stmt = self::$db->prepare($query);
 
             foreach ($params as $key => $value) {
                 $stmt->bindParam($key, $value, PDO::PARAM_STR);
@@ -29,10 +26,5 @@ class DB{
         } catch (\Throwable $th) {
             debug($th->getMessage());
         }
-    }
-
-    public function setDbSelected($connectionKey){
-        self::$dbSelected = $connectionKey;
-        return $this;
     }
 }

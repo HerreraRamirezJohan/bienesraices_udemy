@@ -1,11 +1,6 @@
 {
     "name": "johan/bienes-raices-php_inicio",
     "description": "Bienes Raices",
-    "autoload": {
-        "psr-4": {
-            "Johan\\BienesRaicesPhpInicio\\": "src/"
-        }
-    },
     "authors": [
         {
             "name": "Johan Herrera",
@@ -16,7 +11,7 @@
         "intervention/image": "^3.1"
     },
 
-    "autoload-dev": {
+    "autoload": {
         "psr-4": {
             "Model\\": "Models",
             "MVC\\": "./",

@@ -1,6 +1,6 @@
 <?php
-require '../../includes/app.php';
-use App\Vendedor;
+require_once '../../includes/app.php';
+use Model\Vendedor;
 estaAutenticado();
 
 //Validar que id sea valido
